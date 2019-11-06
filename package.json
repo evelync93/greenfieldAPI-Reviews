@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/Maverick-Meerkats/greenfieldAPI-Reviews/issues"
   },
-  "homepage": "https://github.com/Maverick-Meerkats/greenfieldAPI-Reviews#readme"
+  "homepage": "https://github.com/Maverick-Meerkats/greenfieldAPI-Reviews#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
 }

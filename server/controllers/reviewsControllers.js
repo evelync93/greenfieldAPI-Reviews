@@ -2,20 +2,25 @@ const reviewsModel = require("../models/reviewsModel.js");
 
 module.exports = {
   getReviews: (req, res) => {
-    reviewsModel.getReviewsdb(
-      req.params.product_id,
-      req.query.page,
-      req.query.count,
-      req.query.sort
-    );
-
-    res.send("done");
+    reviewsModel
+      .getReviewsdb(
+        req.params.product_id,
+        req.query.page,
+        req.query.count,
+        req.query.sort
+      )
+      .then(results => {
+        res.send(results);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
 
   getReviewMeta: (req, res) => {
-    reviewsModel.getReviewMeta(req.params.product_id);
+    reviewsModel.getReviewMeta;
 
-    res.send("done");
+    // res.send("done");
   },
 
   postReview: (req, res) => {

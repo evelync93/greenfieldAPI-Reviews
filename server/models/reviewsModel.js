@@ -5,7 +5,7 @@ const mongoDb = require("../../db/index.js");
 
 const reviewSchema = new mongoose.Schema(
   {
-    id: { type: Number, unique: true },
+    review_id: { type: Number, unique: true },
     product_id: Number,
     rating: Number,
     summary: String,
@@ -18,7 +18,7 @@ const reviewSchema = new mongoose.Schema(
     reviewer_email: String,
     helpfulness: Number
   },
-  { collection: "reviews" }
+  { collection: "combined_reviews" }
 );
 
 const Review = mongoose.model("Review", reviewSchema);
@@ -62,6 +62,8 @@ module.exports = {
         .skip(numToSkip);
     }
   },
+
+  getReviewMetadb: () => {},
 
   postReviewdb: () => {},
 

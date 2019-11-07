@@ -19,7 +19,7 @@ module.exports = {
   },
 
   getReviewMeta: (req, res) => {
-    reviewsModel.getReviewMeta;
+    reviewsModel.getReviewMetadb;
 
     // res.send("done");
   },

@@ -23,6 +23,13 @@ const reviewSchema = new mongoose.Schema(
 
 const Review = mongoose.model("Review", reviewSchema);
 
+const characteristicSchema = new mongoose.Schema(
+  {},
+  { collection: "merged_reviews" }
+);
+
+const Characteristic = mongoose.model("Characteristic", characteristicSchema);
+
 const productSchema = new Schema({
   id: { type: Number, unique: true }
 });
@@ -63,7 +70,69 @@ module.exports = {
     }
   },
 
-  getReviewMetadb: () => {},
+  getReviewMetadb: productid => {
+    // {
+    //   "product_id": "2",
+    //   "ratings": {
+    //     2: 1,
+    //     3: 1,
+    //     4: 2,
+    //     // ...
+    //   },
+    //   "recommended": {
+    //     0: 5
+    //     // ...
+    //   },
+    //   "characteristics": {
+    //     "Size": {
+    //       "id": 14,
+    //       "value": "4.0000"
+    //     },
+    //     "Width": {
+    //       "id": 15,
+    //       "value": "3.5000"
+    //     },
+    //     "Comfort": {
+    //       "id": 16,
+    //       "value": "4.0000"
+    //     },
+    //     // ...
+    // }
+    //TODO: check merged_reviews collection for info
+  },
+
+  getRecommendCount: productid => {
+    //TODO: fix output of data which is other (true, false )
+    return Review.aggregate([
+      { $match: { product_id: Number(productid) } },
+      {
+        $bucket: {
+          groupBy: "$recommend",
+          boundaries: [0, 1, 2],
+          default: "Other",
+          output: { count: { $sum: 1 } }
+        }
+      }
+    ]);
+  },
+
+  getRatingCount: productid => {
+    return Review.aggregate([
+      { $match: { product_id: Number(productid) } },
+      {
+        $bucket: {
+          groupBy: "$rating",
+          boundaries: [1, 2, 3, 4, 5, 6],
+          default: "Other",
+          output: { count: { $sum: 1 } }
+        }
+      }
+    ]);
+  },
+
+  getCharacteristics: productid => {
+    return Characteristic.find({ product_id: 4 });
+  },
 
   postReviewdb: () => {},
 

@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
 const mongoDb = require("../../db/index.js");
 
 const reviewSchema = new mongoose.Schema(
@@ -24,15 +22,17 @@ const reviewSchema = new mongoose.Schema(
 const Review = mongoose.model("Review", reviewSchema);
 
 const characteristicSchema = new mongoose.Schema(
-  {},
+  {
+    product_id: Number,
+    name: String,
+    characteristic_id: Number,
+    review_id: Number,
+    value: Number
+  },
   { collection: "merged_reviews" }
 );
 
 const Characteristic = mongoose.model("Characteristic", characteristicSchema);
-
-const productSchema = new Schema({
-  id: { type: Number, unique: true }
-});
 
 module.exports = {
   getReviewsdb: (productid, page = 1, count = 5, sort) => {
@@ -101,7 +101,7 @@ module.exports = {
     //TODO: check merged_reviews collection for info
   },
 
-  getRecommendCount: productid => {
+  getRecommendCountdb: productid => {
     //TODO: fix output of data which is other (true, false )
     return Review.aggregate([
       { $match: { product_id: Number(productid) } },
@@ -116,7 +116,7 @@ module.exports = {
     ]);
   },
 
-  getRatingCount: productid => {
+  getRatingCountdb: productid => {
     return Review.aggregate([
       { $match: { product_id: Number(productid) } },
       {
@@ -130,8 +130,8 @@ module.exports = {
     ]);
   },
 
-  getCharacteristics: productid => {
-    return Characteristic.find({ product_id: 4 });
+  getCharacteristicsdb: productid => {
+    return Characteristic.find({ product_id: productid });
   },
 
   postReviewdb: () => {},

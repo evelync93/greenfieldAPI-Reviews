@@ -20,22 +20,32 @@ module.exports = {
   getReviewMeta: (req, res) => {
     //TODO: need to combine output of rating and recommend
     reviewsModel
-      .getRatingCount(req.params.product_id)
+      .getCharacteristicsdb(req.params.product_id)
       .then(results => {
+        console.log(results);
         res.send(results);
       })
       .catch(err => {
         console.log(err);
       });
 
-    reviewsModel
-      .getRecommendCount(req.params.product_id)
-      .then(results => {
-        res.send(results);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    // reviewsModel
+    //   .getRatingCountdb(req.params.product_id)
+    //   .then(results => {
+    //     res.send(results);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+
+    // reviewsModel
+    //   .getRecommendCountdb(req.params.product_id)
+    //   .then(results => {
+    //     res.send(results);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
 
     // reviewsModel
     //   .getReviewMetadb(req.params.product_id)

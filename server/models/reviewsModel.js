@@ -104,7 +104,7 @@ module.exports = {
     return Characteristic.find({ product_id: productid });
   },
 
-  postReviewdb: (review, productid, characteristicKey) => {
+  postReviewdb: (review, productid) => {
     let reviewID;
     return Review.find({})
       .sort({ review_id: -1 })
@@ -128,7 +128,6 @@ module.exports = {
         });
         reviewToSave.save();
         for (let key in review.characteristics) {
-          const characteristic = review.characteristics[key];
           Characteristic.find({ product_id: productid, characteristic_id: key })
             .limit(1)
             .exec()
@@ -148,7 +147,12 @@ module.exports = {
       });
   },
 
-  markReviewHelpfuldb: () => {},
+  markReviewHelpfuldb: reviewid => {
+    return Review.updateOne(
+      { review_id: reviewid },
+      { $inc: { helpfulness: 1 } }
+    );
+  },
 
   reportReviewdb: () => {}
 };

@@ -1,6 +1,6 @@
 const reviewsModel = require("../models/reviewsModel.js");
 
-let productid, characteristicKey;
+let productid, reviewid;
 
 module.exports = {
   getReviews: (req, res) => {
@@ -65,7 +65,7 @@ module.exports = {
             charTotal[characteristic.name] = characteristic.value;
           }
         }
-        characteristicKey = charIDs;
+
         //TODO: update to automatically update average in response
 
         for (let key in charTotal) {
@@ -83,11 +83,8 @@ module.exports = {
 
   postReview: (req, res) => {
     productid = req.params.product_id;
-    // let promisesNewReview = [
-    //   reviewsModel.postReviewdb(req.body, req.params.product_id)
-    // ];
     reviewsModel
-      .postReviewdb(req.body, productid, characteristicKey)
+      .postReviewdb(req.body, productid)
       .then(res.sendStatus(201))
       .catch(err => {
         console.log(err);
@@ -95,13 +92,18 @@ module.exports = {
   },
 
   markReviewHelpful: (req, res) => {
-    reviewsModel.markReviewHelpfuldb(req.params.product_id);
-
-    res.send("done");
+    reviewid = req.params.review_id;
+    reviewsModel
+      .markReviewHelpfuldb(reviewid)
+      .then(res.sendStatus(204))
+      .catch(err => {
+        console.log(err);
+      });
   },
 
   reportReview: (req, res) => {
-    reviewsModel.markReviewHelpfuldb(req.params.product_id);
+    reviewid = req.params.review_id;
+    reviewsModel.markReviewHelpfuldb(reviewid);
 
     res.send("done");
   }

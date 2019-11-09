@@ -30,7 +30,7 @@ const characteristicSchema = new mongoose.Schema(
     review_id: Number,
     value: Number
   },
-  { collection: "merged_reviews" }
+  { collection: "combined_characteristics" }
 );
 
 const Characteristic = mongoose.model("Characteristic", characteristicSchema);
@@ -125,31 +125,18 @@ module.exports = {
           response: null,
           helpfulness: 0,
           review_id: reviewID + 1
-
-          // product_id: 234293,
-          // rating: 3,
-          // date: "2019-06-19",
-          // summary: "NEW TEST",
-          // body: "NEW TEST",
-          // recommend: 1,
-          // reported: 0,
-          // reviewer_name: "hello",
-          // reviewer_email: "check@gmail.com",
-          // response: "null",
-          // helpfulness: 0,
-          // review_id: reviewID + 1
-
-          //   rating: this.state.starValue,
-          //   summary: this.state.title,
-          //   body: this.state.description,
-          //   recommend: this.state.recommend,
-          //   name: this.state.userName,
-          //   email: this.state.email,
-          //   photos: this.state.photos,
-          //   characteristics: this.state.characteristics
         });
         reviewToSave.save();
       });
+  },
+
+  saveCharacteristicsdb: (characteristics, productid) => {
+
+    // { "_id" : ObjectId("5dc2eee9f8c9b154f310f4a4"), "product_id" : 4, "name" : "Comfort", "characteristic_id" : 12, "review_id" : 9, "value" : 4 }
+    for (let key in characteristics){
+      let newChar = {}
+
+    }
   },
 
   markReviewHelpfuldb: () => {},

@@ -19,13 +19,14 @@ module.exports = {
 
   getReviewMeta: (req, res) => {
     let productid = req.params.product_id;
-    const promises = [
+
+    let promisesMeta = [
       reviewsModel.getCharacteristicsdb(productid).exec(),
       reviewsModel.getRatingCountdb(productid).exec(),
       reviewsModel.getRecommendCountdb(productid).exec()
     ];
 
-    Promise.all(promises)
+    Promise.all(promisesMeta)
       .then(results => {
         let characteristics = results[0];
         let ratings = results[1];
@@ -81,7 +82,7 @@ module.exports = {
   postReview: (req, res) => {
     reviewsModel
       .postReviewdb(req.body, req.params.product_id)
-      .then(res.send("done"))
+      .then(res.sendStatus(201))
       .catch(err => {
         console.log(err);
       });

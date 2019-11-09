@@ -1,5 +1,7 @@
 const reviewsModel = require("../models/reviewsModel.js");
 
+let productid, characteristicKey;
+
 module.exports = {
   getReviews: (req, res) => {
     reviewsModel
@@ -18,8 +20,7 @@ module.exports = {
   },
 
   getReviewMeta: (req, res) => {
-    let productid = req.params.product_id;
-
+    productid = req.params.product_id;
     let promisesMeta = [
       reviewsModel.getCharacteristicsdb(productid).exec(),
       reviewsModel.getRatingCountdb(productid).exec(),
@@ -51,7 +52,7 @@ module.exports = {
         for (let k = 0; k < characteristics.length; k++) {
           let characteristic = characteristics[k];
           if (charIDs[characteristic.name] === undefined) {
-            charIDs[characteristic.name] = characteristic["characteristic_id"];
+            characteristic["characteristic_id"] = charIDs[characteristic.name];
           }
           if (charCount[characteristic.name]) {
             charCount[characteristic.name]++;
@@ -64,6 +65,7 @@ module.exports = {
             charTotal[characteristic.name] = characteristic.value;
           }
         }
+        characteristicKey = charIDs;
         //TODO: update to automatically update average in response
 
         for (let key in charTotal) {
@@ -80,8 +82,12 @@ module.exports = {
   },
 
   postReview: (req, res) => {
+    productid = req.params.product_id;
+    // let promisesNewReview = [
+    //   reviewsModel.postReviewdb(req.body, req.params.product_id)
+    // ];
     reviewsModel
-      .postReviewdb(req.body, req.params.product_id)
+      .postReviewdb(req.body, productid, characteristicKey)
       .then(res.sendStatus(201))
       .catch(err => {
         console.log(err);

@@ -104,7 +104,7 @@ module.exports = {
     return Characteristic.find({ product_id: productid });
   },
 
-  postReviewdb: (review, productid) => {
+  postReviewdb: (review, productid, characteristicKey) => {
     let reviewID;
     return Review.find({})
       .sort({ review_id: -1 })
@@ -127,16 +127,25 @@ module.exports = {
           review_id: reviewID + 1
         });
         reviewToSave.save();
+        for (let key in review.characteristics) {
+          const characteristic = review.characteristics[key];
+          Characteristic.find({ product_id: productid, characteristic_id: key })
+            .limit(1)
+            .exec()
+            .then(results => {
+              let charName = results[0].name;
+              console.log("name check", charName);
+              const newChar = new Characteristic({
+                product_id: productid,
+                name: charName,
+                characteristic_id: key,
+                review_id: reviewID + 1,
+                value: review.characteristics[key]
+              });
+              newChar.save();
+            });
+        }
       });
-  },
-
-  saveCharacteristicsdb: (characteristics, productid) => {
-
-    // { "_id" : ObjectId("5dc2eee9f8c9b154f310f4a4"), "product_id" : 4, "name" : "Comfort", "characteristic_id" : 12, "review_id" : 9, "value" : 4 }
-    for (let key in characteristics){
-      let newChar = {}
-
-    }
   },
 
   markReviewHelpfuldb: () => {},

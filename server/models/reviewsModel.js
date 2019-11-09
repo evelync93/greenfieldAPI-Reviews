@@ -41,14 +41,14 @@ module.exports = {
 
     //if sort is undefined...
     if (sort === undefined) {
-      return Review.find({ product_id: productid })
+      return Review.find({ product_id: productid, reported: 0 })
         .limit(Number(count))
         .skip(numToSkip);
     }
 
     //if sort is newest...
     if (sort === "newest") {
-      return Review.find({ product_id: productid })
+      return Review.find({ product_id: productid, reported: 0 })
         .sort({ date: -1 })
         .limit(Number(count))
         .skip(numToSkip);
@@ -56,7 +56,7 @@ module.exports = {
 
     //if sort is helpful...
     if (sort === "helpful") {
-      return Review.find({ product_id: productid })
+      return Review.find({ product_id: productid, reported: 0 })
         .sort({ helpfulness: -1 })
         .limit(Number(count))
         .skip(numToSkip);
@@ -154,5 +154,7 @@ module.exports = {
     );
   },
 
-  reportReviewdb: () => {}
+  reportReviewdb: reviewid => {
+    return Review.update({ review_id: reviewid }, { $set: { reported: 1 } });
+  }
 };

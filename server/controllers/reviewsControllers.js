@@ -103,8 +103,11 @@ module.exports = {
 
   reportReview: (req, res) => {
     reviewid = req.params.review_id;
-    reviewsModel.markReviewHelpfuldb(reviewid);
-
-    res.send("done");
+    reviewsModel
+      .reportReviewdb(reviewid)
+      .then(res.sendStatus(204))
+      .catch(err => {
+        console.log(err);
+      });
   }
 };

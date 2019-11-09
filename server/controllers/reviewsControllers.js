@@ -18,7 +18,6 @@ module.exports = {
   },
 
   getReviewMeta: (req, res) => {
-    //TODO: need to combine output of rating and recommend
     let productid = req.params.product_id;
     const promises = [
       reviewsModel.getCharacteristicsdb(productid).exec(),
@@ -64,6 +63,7 @@ module.exports = {
             charTotal[characteristic.name] = characteristic.value;
           }
         }
+        //TODO: update to automatically update average in response
 
         for (let key in charTotal) {
           charDetails[key] = {};
@@ -79,9 +79,12 @@ module.exports = {
   },
 
   postReview: (req, res) => {
-    reviewsModel.postReviewdb(req.body);
-
-    res.send("done");
+    reviewsModel
+      .postReviewdb(req.body, req.params.product_id)
+      .then(res.send("done"))
+      .catch(err => {
+        console.log(err);
+      });
   },
 
   markReviewHelpful: (req, res) => {

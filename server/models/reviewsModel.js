@@ -7,14 +7,15 @@ const reviewSchema = new mongoose.Schema(
     product_id: Number,
     rating: Number,
     summary: String,
-    recommend: Number,
+    recommend: Boolean,
     response: String,
     body: String,
     date: Date,
     reviewer_name: String,
     photos: Array,
     reviewer_email: String,
-    helpfulness: Number
+    helpfulness: Number,
+    reported: Number
   },
   { collection: "combined_reviews" }
 );
@@ -103,7 +104,53 @@ module.exports = {
     return Characteristic.find({ product_id: productid });
   },
 
-  postReviewdb: () => {},
+  postReviewdb: (review, productid) => {
+    let reviewID;
+    return Review.find({})
+      .sort({ review_id: -1 })
+      .limit(1)
+      .exec()
+      .then(results => {
+        reviewID = results[0]["review_id"] + 1;
+        const reviewToSave = new Review({
+          product_id: productid,
+          rating: review.rating,
+          date: new Date(),
+          summary: review.summary,
+          body: review.body,
+          recommend: review.recommend,
+          reported: 0,
+          reviewer_name: review.name,
+          reviewer_email: review.email,
+          response: null,
+          helpfulness: 0,
+          review_id: reviewID + 1
+
+          // product_id: 234293,
+          // rating: 3,
+          // date: "2019-06-19",
+          // summary: "NEW TEST",
+          // body: "NEW TEST",
+          // recommend: 1,
+          // reported: 0,
+          // reviewer_name: "hello",
+          // reviewer_email: "check@gmail.com",
+          // response: "null",
+          // helpfulness: 0,
+          // review_id: reviewID + 1
+
+          //   rating: this.state.starValue,
+          //   summary: this.state.title,
+          //   body: this.state.description,
+          //   recommend: this.state.recommend,
+          //   name: this.state.userName,
+          //   email: this.state.email,
+          //   photos: this.state.photos,
+          //   characteristics: this.state.characteristics
+        });
+        reviewToSave.save();
+      });
+  },
 
   markReviewHelpfuldb: () => {},
 

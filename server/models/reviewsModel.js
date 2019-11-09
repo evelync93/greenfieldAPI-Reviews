@@ -38,7 +38,6 @@ const Characteristic = mongoose.model("Characteristic", characteristicSchema);
 module.exports = {
   getReviewsdb: (productid, page = 1, count = 5, sort) => {
     let numToSkip = count * (page - 1);
-
     //if sort is undefined...
     if (sort === undefined) {
       return Review.find({ product_id: productid, reported: 0 })

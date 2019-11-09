@@ -4,15 +4,17 @@ let productid, reviewid;
 
 module.exports = {
   getReviews: (req, res) => {
+    productid = req.params.product_id;
     reviewsModel
-      .getReviewsdb(
-        req.params.product_id,
-        req.query.page,
-        req.query.count,
-        req.query.sort
-      )
+      .getReviewsdb(productid, req.query.page, req.query.count, req.query.sort)
       .then(results => {
-        res.send(results);
+        const allReviews = {
+          product: productid,
+          page: req.query.page || 1,
+          count: req.query.count || 5,
+          results: results
+        };
+        res.send(allReviews);
       })
       .catch(err => {
         console.log(err);

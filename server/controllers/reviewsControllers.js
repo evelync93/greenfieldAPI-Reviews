@@ -35,6 +35,7 @@ module.exports = {
         let characteristics = results[0];
         let ratings = results[1];
         let recommend = results[2];
+        console.log(characteristics, ratings, recommend);
         let metadata = {
           product_id: productid,
           ratings: {},
@@ -55,7 +56,7 @@ module.exports = {
         for (let k = 0; k < characteristics.length; k++) {
           let characteristic = characteristics[k];
           if (charIDs[characteristic.name] === undefined) {
-            characteristic["characteristic_id"] = charIDs[characteristic.name];
+            charIDs[characteristic.name] = characteristic["characteristic_id"];
           }
           if (charCount[characteristic.name]) {
             charCount[characteristic.name]++;
@@ -74,7 +75,7 @@ module.exports = {
         for (let key in charTotal) {
           charDetails[key] = {};
           charDetails[key].value = charTotal[key] / charCount[key];
-          charDetails[key].id = 1;
+          charDetails[key].id = charIDs[key];
         }
         metadata.characteristics = charDetails;
         res.send(metadata);

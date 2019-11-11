@@ -139,9 +139,7 @@ module.exports = {
             .limit(1)
             .exec()
             .then(results => {
-              console.log(results[0])
               let charName = results[0].name;
-              console.log("name check", charName);
               const newChar = new Characteristic({
                 product_id: productid,
                 name: charName,

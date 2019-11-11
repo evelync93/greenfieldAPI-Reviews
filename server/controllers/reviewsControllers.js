@@ -35,7 +35,6 @@ module.exports = {
         let characteristics = results[0];
         let ratings = results[1];
         let recommend = results[2];
-        console.log(characteristics, ratings, recommend);
         let metadata = {
           product_id: productid,
           ratings: {},

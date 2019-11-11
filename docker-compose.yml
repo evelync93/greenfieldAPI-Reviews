@@ -2,10 +2,19 @@ version: "3"
 
 services:
   web:
+    depends_on:
+      - mongo
     build: .
+    ports:
+      - "80:3000"
 
-  node:
-    image:
-  
   mongo:
-    image:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mounts/db_data:/var/lib/mongo/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGODB_DATABASE=greenfield

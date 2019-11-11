@@ -35,8 +35,16 @@ const characteristicSchema = new mongoose.Schema(
 
 const Characteristic = mongoose.model("Characteristic", characteristicSchema);
 
+// const newReviewID
+
 module.exports = {
+  // getReviewID: (){
+  //   //find query
+
+  // },
+
   getReviewsdb: (productid, page = 1, count = 5, sort) => {
+    console.log("checking", productid, page, count, sort);
     let numToSkip = count * (page - 1);
     //if sort is undefined...
     if (sort === undefined) {

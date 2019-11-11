@@ -7,6 +7,7 @@ module.exports = {
     productid = req.params.product_id;
     reviewsModel
       .getReviewsdb(productid, req.query.page, req.query.count, req.query.sort)
+      .exec()
       .then(results => {
         const allReviews = {
           product: productid,

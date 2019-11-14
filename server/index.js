@@ -11,5 +11,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/reviews", reviewsRoutes);
+app.get("/loaderio-9af951c832bfac05fbbc0e49e026aa6f/", (req, res) => {
+  res.send("loaderio-9af951c832bfac05fbbc0e49e026aa6f");
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

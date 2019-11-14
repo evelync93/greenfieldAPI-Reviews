@@ -1,5 +1,9 @@
 config:
   target: "http://localhost:3000"
+  payload:
+    path: "../data/products.csv"
+    fields:
+      - "id"
   phases:
     - duration: 10
       arrivalRate: 20
@@ -8,4 +12,4 @@ config:
 scenarios:
   - flow:
       - get:
-          url: "/reviews/3851/list"
+          url: "/reviews/{{id}}/list"

@@ -12,12 +12,9 @@ const mongoose = require("mongoose");
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI);
 } else {
-  mongoose.connect(
-    "mongodb://ec2-3-133-94-163.us-east-2.compute.amazonaws.com:27017/greenfield",
-    {
-      useNewUrlParser: true
-    }
-  );
+  mongoose.connect("mongodb://18.224.150.214:27017/greenfield", {
+    useNewUrlParser: true
+  });
 }
 
 // const connectWithRetry = () => {

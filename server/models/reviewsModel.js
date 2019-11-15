@@ -119,7 +119,7 @@ module.exports = {
         //   .limit(1)
         //   .exec()
         .then(results => {
-          console.log("doc count", results[0]);
+          console.log("doc count", results);
           reviewID = results[0]["review_id"] + 1;
           const reviewToSave = new Review({
             product_id: productid,

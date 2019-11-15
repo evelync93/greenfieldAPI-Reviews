@@ -10,8 +10,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.get("/loaderio-9af951c832bfac05fbbc0e49e026aa6f/", (req, res) => {
-  res.send("loaderio-9af951c832bfac05fbbc0e49e026aa6f");
+app.get("/loaderio-b5b6a9b5caf9f0aa9449b0e8b6ae7b41/", (req, res) => {
+  res.send("loaderio-b5b6a9b5caf9f0aa9449b0e8b6ae7b41");
 });
 app.use("/reviews", reviewsRoutes);
 

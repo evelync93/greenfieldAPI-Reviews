@@ -44,7 +44,6 @@ module.exports = {
   // },
 
   getReviewsdb: (productid, page = 1, count = 5, sort) => {
-    console.log("checking", productid, page, count, sort);
     let numToSkip = count * (page - 1);
     //if sort is undefined...
     if (sort === undefined) {
@@ -113,44 +112,51 @@ module.exports = {
 
   postReviewdb: (review, productid) => {
     let reviewID;
-    return Review.find({})
-      .sort({ review_id: -1 })
-      .limit(1)
-      .exec()
-      .then(results => {
-        reviewID = results[0]["review_id"] + 1;
-        const reviewToSave = new Review({
-          product_id: productid,
-          rating: review.rating,
-          date: new Date(),
-          summary: review.summary,
-          body: review.body,
-          recommend: review.recommend,
-          reported: 0,
-          reviewer_name: review.name,
-          reviewer_email: review.email,
-          response: null,
-          helpfulness: 0,
-          review_id: reviewID + 1
-        });
-        reviewToSave.save();
-        for (let key in review.characteristics) {
-          Characteristic.find({ product_id: productid, characteristic_id: key })
-            .limit(1)
-            .exec()
-            .then(results => {
-              let charName = results[0].name;
-              const newChar = new Characteristic({
-                product_id: productid,
-                name: charName,
-                characteristic_id: key,
-                review_id: reviewID + 1,
-                value: review.characteristics[key]
+    return (
+      Review.estimatedDocumentCount()
+        // return Review.find({})
+        //   .sort({ review_id: -1 })
+        //   .limit(1)
+        //   .exec()
+        .then(results => {
+          console.log("doc count", results[0]);
+          reviewID = results[0]["review_id"] + 1;
+          const reviewToSave = new Review({
+            product_id: productid,
+            rating: review.rating,
+            date: new Date(),
+            summary: review.summary,
+            body: review.body,
+            recommend: review.recommend,
+            reported: 0,
+            reviewer_name: review.name,
+            reviewer_email: review.email,
+            response: null,
+            helpfulness: 0,
+            review_id: reviewID + 1
+          });
+          reviewToSave.save();
+          for (let key in review.characteristics) {
+            Characteristic.find({
+              product_id: productid,
+              characteristic_id: key
+            })
+              .limit(1)
+              .exec()
+              .then(results => {
+                let charName = results[0].name;
+                const newChar = new Characteristic({
+                  product_id: productid,
+                  name: charName,
+                  characteristic_id: key,
+                  review_id: reviewID + 1,
+                  value: review.characteristics[key]
+                });
+                newChar.save();
               });
-              newChar.save();
-            });
-        }
-      });
+          }
+        })
+    );
   },
 
   markReviewHelpfuldb: reviewid => {

@@ -112,16 +112,16 @@ module.exports = {
 
   postReviewdb: (review, productid) => {
     let reviewID;
-    return (
-      Review.estimatedDocumentCount()
-        // return Review.find({})
-        //   .sort({ review_id: -1 })
-        //   .limit(1)
-        //   .exec()
+    // return (
+      // Review.estimatedDocumentCount()
+        return Review.find({})
+          .sort({ review_id: -1 })
+          .limit(1)
+          .exec()
         .then(results => {
           // console.log("doc count", results);
-          // reviewID = results[0]["review_id"] + 1;
-          reviewID = results;
+          reviewID = results[0]["review_id"] + 1;
+          // reviewID = results;
           const reviewToSave = new Review({
             product_id: productid,
             rating: review.rating,

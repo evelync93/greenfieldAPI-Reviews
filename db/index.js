@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI);
 } else {
-  mongoose.connect("mongodb://18.224.150.214:27017/greenfield", {
+  mongoose.connect("mongodb://18.224.110.64:27017/greenfield", {
     useNewUrlParser: true
   });
 }

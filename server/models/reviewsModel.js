@@ -132,46 +132,50 @@ module.exports = {
       { _id: "combined_reviews" },
       { $inc: { value: 1 } },
       { returnNewDocument: true }
-    ).then(results => {
-      console.log("doc count", results["value"]);
-      // reviewID = results[0]["review_id"] + 1;
-      // reviewID = results;
-      reviewID = results["value"];
-      const reviewToSave = new Review({
-        product_id: productid,
-        rating: review.rating,
-        date: new Date(),
-        summary: review.summary,
-        body: review.body,
-        recommend: review.recommend,
-        reported: 0,
-        reviewer_name: review.name,
-        reviewer_email: review.email,
-        response: null,
-        helpfulness: 0,
-        review_id: reviewID
-      });
-      reviewToSave.save();
-      for (let key in review.characteristics) {
-        Characteristic.find({
+    )
+      .then(results => {
+        console.log("doc count", results["value"]);
+        // reviewID = results[0]["review_id"] + 1;
+        // reviewID = results;
+        reviewID = results["value"];
+        const reviewToSave = new Review({
           product_id: productid,
-          characteristic_id: key
-        })
-          .limit(1)
-          .exec()
-          .then(results => {
-            let charName = results[0].name;
-            const newChar = new Characteristic({
-              product_id: productid,
-              name: charName,
-              characteristic_id: key,
-              review_id: reviewID,
-              value: review.characteristics[key]
+          rating: review.rating,
+          date: new Date(),
+          summary: review.summary,
+          body: review.body,
+          recommend: review.recommend,
+          reported: 0,
+          reviewer_name: review.name,
+          reviewer_email: review.email,
+          response: null,
+          helpfulness: 0,
+          review_id: results["value"]
+        });
+        reviewToSave.save();
+        for (let key in review.characteristics) {
+          Characteristic.find({
+            product_id: productid,
+            characteristic_id: key
+          })
+            .limit(1)
+            .exec()
+            .then(results => {
+              let charName = results[0].name;
+              const newChar = new Characteristic({
+                product_id: productid,
+                name: charName,
+                characteristic_id: key,
+                review_id: reviewID,
+                value: review.characteristics[key]
+              });
+              newChar.save();
             });
-            newChar.save();
-          });
-      }
-    });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     // );
   },
 

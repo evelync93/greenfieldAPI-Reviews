@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const mongoDb = require("../../db/index.js");
+const shortid = require("shortid");
 
 const reviewSchema = new mongoose.Schema(
   {
-    review_id: { type: Number, unique: true },
+    review_id: { type: String, unique: true },
     product_id: Number,
     rating: Number,
     summary: String,
@@ -27,7 +27,7 @@ const characteristicSchema = new mongoose.Schema(
     product_id: Number,
     name: String,
     characteristic_id: Number,
-    review_id: Number,
+    review_id: String,
     value: Number
   },
   { collection: "combined_characteristics" }
@@ -121,62 +121,53 @@ module.exports = {
   },
 
   postReviewdb: (review, productid) => {
-    let reviewID;
+    // let reviewID;
     // return (
     // Review.estimatedDocumentCount()
     // return Review.find({})
     //   .sort({ review_id: -1 })
     //   .limit(1)
     //   .exec()
-    return Sequence.findOneAndUpdate(
-      { _id: "combined_reviews" },
-      { $inc: { value: 1 } },
-      { returnNewDocument: true }
-    )
-      .then(results => {
-        console.log("doc count", results["value"]);
-        // reviewID = results[0]["review_id"] + 1;
-        // reviewID = results;
-        reviewID = results["value"] + 1;
-        const reviewToSave = new Review({
-          product_id: productid,
-          rating: review.rating,
-          date: new Date(),
-          summary: review.summary,
-          body: review.body,
-          recommend: review.recommend,
-          reported: 0,
-          reviewer_name: review.name,
-          reviewer_email: review.email,
-          response: null,
-          helpfulness: 0,
-          review_id: results["value"]
-        });
-        reviewToSave.save();
-        for (let key in review.characteristics) {
-          Characteristic.find({
-            product_id: productid,
-            characteristic_id: key
-          })
-            .limit(1)
-            .exec()
-            .then(results => {
-              let charName = results[0].name;
-              const newChar = new Characteristic({
-                product_id: productid,
-                name: charName,
-                characteristic_id: key,
-                review_id: reviewID,
-                value: review.characteristics[key]
-              });
-              newChar.save();
-            });
-        }
+    //   .then(results => {
+    //     console.log("doc count", results["value"]);
+    // reviewID = results[0]["review_id"] + 1;
+    // reviewID = results;
+    // reviewID = results["value"] + 1;
+    let reviewID = shortid.generate();
+
+    const reviewToSave = new Review({
+      product_id: productid,
+      rating: review.rating,
+      date: new Date(),
+      summary: review.summary,
+      body: review.body,
+      recommend: review.recommend,
+      reported: 0,
+      reviewer_name: review.name,
+      reviewer_email: review.email,
+      response: null,
+      helpfulness: 0,
+      review_id: reviewID
+    });
+    reviewToSave.save();
+    for (let key in review.characteristics) {
+      return Characteristic.find({
+        product_id: productid,
+        characteristic_id: key
       })
-      .catch(err => {
-        console.log(err);
-      });
-    // );
+        .limit(1)
+        .then(results => {
+          let charName = results[0].name;
+          const newChar = new Characteristic({
+            product_id: productid,
+            name: charName,
+            characteristic_id: key,
+            review_id: reviewID,
+            value: review.characteristics[key]
+          });
+          newChar.save();
+        });
+    }
   },
 
   markReviewHelpfuldb: reviewid => {

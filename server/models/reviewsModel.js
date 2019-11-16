@@ -137,7 +137,7 @@ module.exports = {
         console.log("doc count", results["value"]);
         // reviewID = results[0]["review_id"] + 1;
         // reviewID = results;
-        reviewID = results["value"];
+        reviewID = results["value"] + 1;
         const reviewToSave = new Review({
           product_id: productid,
           rating: review.rating,

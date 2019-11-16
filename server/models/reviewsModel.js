@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoDb = require("../../db/index.js");
 const shortid = require("shortid");
 
 const reviewSchema = new mongoose.Schema(
@@ -128,13 +129,36 @@ module.exports = {
     //   .sort({ review_id: -1 })
     //   .limit(1)
     //   .exec()
+    // return Sequence.findOneAndUpdate(
+    //   { _id: "combined_reviews" },
+    //   { $inc: { value: 1 } },
+    //   { returnNewDocument: true }
+    // )
     //   .then(results => {
     //     console.log("doc count", results["value"]);
     // reviewID = results[0]["review_id"] + 1;
     // reviewID = results;
     // reviewID = results["value"] + 1;
     let reviewID = shortid.generate();
-
+    for (let key in review.characteristics) {
+      return Characteristic.find({
+        product_id: productid,
+        characteristic_id: key
+      })
+        .limit(1)
+        .exec()
+        .then(results => {
+          let charName = results[0].name;
+          const newChar = new Characteristic({
+            product_id: productid,
+            name: charName,
+            characteristic_id: key,
+            review_id: reviewID,
+            value: review.characteristics[key]
+          });
+          newChar.save();
+        });
+    }
     const reviewToSave = new Review({
       product_id: productid,
       rating: review.rating,
@@ -149,25 +173,13 @@ module.exports = {
       helpfulness: 0,
       review_id: reviewID
     });
-    reviewToSave.save();
-    for (let key in review.characteristics) {
-      return Characteristic.find({
-        product_id: productid,
-        characteristic_id: key
-      })
-        .limit(1)
-        .then(results => {
-          let charName = results[0].name;
-          const newChar = new Characteristic({
-            product_id: productid,
-            name: charName,
-            characteristic_id: key,
-            review_id: reviewID,
-            value: review.characteristics[key]
-          });
-          newChar.save();
-        });
-    }
+    return reviewToSave.save();
+
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
+    // );
   },
 
   markReviewHelpfuldb: reviewid => {

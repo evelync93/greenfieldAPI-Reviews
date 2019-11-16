@@ -122,23 +122,6 @@ module.exports = {
   },
 
   postReviewdb: (review, productid) => {
-    // let reviewID;
-    // return (
-    // Review.estimatedDocumentCount()
-    // return Review.find({})
-    //   .sort({ review_id: -1 })
-    //   .limit(1)
-    //   .exec()
-    // return Sequence.findOneAndUpdate(
-    //   { _id: "combined_reviews" },
-    //   { $inc: { value: 1 } },
-    //   { returnNewDocument: true }
-    // )
-    //   .then(results => {
-    //     console.log("doc count", results["value"]);
-    // reviewID = results[0]["review_id"] + 1;
-    // reviewID = results;
-    // reviewID = results["value"] + 1;
     let reviewID = shortid.generate();
     for (let key in review.characteristics) {
       return Characteristic.find({
@@ -174,12 +157,6 @@ module.exports = {
       review_id: reviewID
     });
     return reviewToSave.save();
-
-    // })
-    // .catch(err => {
-    //   console.log(err);
-    // });
-    // );
   },
 
   markReviewHelpfuldb: reviewid => {

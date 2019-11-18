@@ -46,24 +46,16 @@ const sequenceSchema = new mongoose.Schema(
 
 const Sequence = mongoose.model("Sequence", sequenceSchema);
 
-// const newReviewID
-
 module.exports = {
-  // getReviewID: (){
-  //   //find query
-
-  // },
-
   getReviewsdb: (productid, page = 1, count = 5, sort) => {
     let numToSkip = count * (page - 1);
-    //if sort is undefined...
+
     if (sort === undefined) {
       return Review.find({ product_id: productid, reported: 0 })
         .limit(Number(count))
         .skip(numToSkip);
     }
 
-    //if sort is newest...
     if (sort === "newest") {
       return Review.find({ product_id: productid, reported: 0 })
         .sort({ date: -1 })
@@ -71,7 +63,6 @@ module.exports = {
         .skip(numToSkip);
     }
 
-    //if sort is helpful...
     if (sort === "helpful") {
       return Review.find({ product_id: productid, reported: 0 })
         .sort({ helpfulness: -1 })
@@ -79,7 +70,6 @@ module.exports = {
         .skip(numToSkip);
     }
 
-    //if sort is relevant...same as helpful??
     if (sort === "relevant") {
       return Review.find({ product_id: productid })
         .sort({ helpfulness: -1 })
@@ -89,7 +79,6 @@ module.exports = {
   },
 
   getRecommendCountdb: productid => {
-    //TODO: fix output of data which is other (true, false )
     return Review.aggregate([
       { $match: { product_id: Number(productid) } },
       {

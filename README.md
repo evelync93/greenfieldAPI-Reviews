@@ -1,5 +1,73 @@
 # Greenfield Reviews API
 
+The goal of this project was to design a system for an existing e-commerce application for the Reviews microservice component, which could handle increased web traffic of at least 100 request per second across 5 endpoints. The relevant endpoints for this API can be found on the bottom of this readme.
+
+The reviews data was generated from 4 CSV files inclusive of over 40 million unique records. 
+
+Due to the nested structure of the endpoints, and ease of adding on additional fields to tables, MongoDB was selected as the database. Docker was used to create an easily horizontally scalable system, and NGINX to support high throughput.
+
+### System Infrastructure
+EC2 t2.micro instances running Node server and MongoDB database deployed with Docker
+
+### Results
+
+* Optimizations included implementing indexing, aggregation pipeline operations, and server side pagination to improve query time for a complex lookup required across several endpoints
+* The production version of the service is deployed and scaled to 3 AWS EC2 instances (t2.micro) using Docker and NGINX
+* The RESTful API implemented for Reviews endpoints achieved 16ms latency and 0% error rate for 1000 RPS
+
+## Table of Contents
+
+  - [Installing-Dependencies](#installing-dependencies)
+  - [Technologies-Used](#technologies-used)
+  - [Requirements](#requirements)
+  - [Routes](#routes)
+  - [API](#api)
+
+## Installing-Dependencies
+
+> Navigate to the root directory and run the following scripts to run locally
+
+- `npm install` - install dependencies
+- `npm start` - start the server in production
+
+* Navigate to http://localhost:3000/
+
+## Technologies-Used
+
+> Back-End
+
+- [Node.js](https://nodejs.org/en/)
+- [Express](https://expressjs.com)
+- [MongoDB](https://www.mongodb.com/)
+- [Docker](https://www.docker.com)
+- [NGINX](https://www.nginx.com/)
+
+> Testing
+
+- [Artillery](https://artillery.io/)
+- [Loader.io](http://loader.io/)
+
+## Requirements
+
+Ensure that the following modules are installed before running `npm install`
+
+- Node v10.13.0 or higher
+
+## Routes
+
+> Listed are available routes that can be handled by the API.
+
+| Request Type | Endpoint                          | Purpose                                                                                                               | Status |
+| ------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------ |
+| GET          | /reviews/:product_id/list                    | Returns a list of reviews for a particular product. This list does not include any reported reviews | 200    |
+| GET          | /reviews/:product_id/meta           | Returns review metadata for a given product                                                             | 200    |
+| POST         | /reviews/:product_id                    | Adds a review for the given product                                       | 201    |
+| PUT         | /reviews/helpful/:review_id           | Updates a review to show it was found helpful                           | 204    |
+| PUT          | /reviews/report/:review_id | Updates a review to show it was reported. Note, this action does not delete the review, but the review will not be returned in the above GET request                                                              | 204    |
+
+
+## API
+
 ### Use of Parameters
 In an HTTP GET request, parameters are sent as a query string:
 
